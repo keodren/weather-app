@@ -22,7 +22,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Uses standard modern Node version
+          node-version: '24' # Uses standard modern Node version
 
       - name: Install Dependencies
         run: npm install
