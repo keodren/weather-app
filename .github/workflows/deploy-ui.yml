@@ -1,0 +1,36 @@
+name: Deploy Weather App UI
+
+# This tells GitHub to only run the deployment when code is pushed to the main branch
+on:
+  push:
+    branches:
+      - main
+    # It will ONLY run if files inside the UI worker or dependencies change
+    paths:
+      - 'workers/weather-app-ui/**'
+      - 'package.json'
+      - 'package-lock.json'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Build & Deploy
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Uses standard modern Node version
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Deploy to Cloudflare
+        # We pass the secrets we created earlier as environment variables
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        # This is the exact same turbo command you ran locally!
+        run: npx turbo run deploy --filter=weather-app-ui
