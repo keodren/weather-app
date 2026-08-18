@@ -29,9 +29,9 @@ jobs:
         run: npm install
       
       - name: Deploy to Cloudflare
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken:  ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          # This tells Wrangler to execute from inside the API worker directory
-          workingDirectory: 'workers/weather-app-ui'
+        # We pass the secrets we created earlier as environment variables
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        # This is the exact same turbo command you ran locally!
+        run: npx turbo run deploy --filter=weather-app-ui
