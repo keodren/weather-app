@@ -8,8 +8,6 @@ on:
     # It will ONLY run if files inside the UI worker or dependencies change
     paths:
       - 'workers/weather-app-ui/**'
-      - 'package.json'
-      - 'package-lock.json'
 
 jobs:
   deploy:
@@ -23,14 +21,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '24' # Uses standard modern Node version
+      
+      - name: Upgrade npm to match Turborepo requirement
+        run: npm install -g npm@12.0.1
 
       - name: Install Dependencies
         run: npm install
-
+      
       - name: Deploy to Cloudflare
-        # We pass the secrets we created earlier as environment variables
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        # This is the exact same turbo command you ran locally!
-        run: npx turbo run deploy --filter=weather-app-ui
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken:  ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # This tells Wrangler to execute from inside the API worker directory
+          workingDirectory: 'workers/weather-app-ui'
