@@ -6,6 +6,7 @@ const CITIES = [
   { value: "berlin", label: "Berlin, Germany" },
   { value: "tokyo", label: "Tokyo, Japan" },
   { value: "dubai", label: "Dubai, UAE" },
+  { value: "buenos-aires", label: "Buenos Aires, Argentina" },
 ];
 
 export default function Home() {
